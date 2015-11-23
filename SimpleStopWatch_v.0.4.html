@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>SimpleStopWatch ver.0.1</title>
+      <script lang="javascript">
+
+        function id(_id) {
+          return document.getElementById(_id);
+        }
+        function name(_name) {
+          return document.getElementsByName(_name);
+        }
+
+        var interval;
+        var startTime;
+
+        function init() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          id('disp_time_counter').textContent = '00:00:00.000';
+        }
+
+        function onCLickBtnStart() {
+          id('btn_start').style.display = 'none';
+          id('btn_stop').style.display = 'inline';
+          startTime = Date.now();
+          interval = setInterval("countUp()", 1);
+        }
+        function onClickBtnStop() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          clearInterval(interval);
+        }
+        function countUp() {
+          var time = new Date(Date.now() - startTime);
+          var hh = time.getHours() + (time.getTimezoneOffset() / 60);
+          var mm = time.getMinutes();
+          var ss = time.getSeconds();
+          var ff = time.getMilliseconds();
+          id('disp_time_counter').textContent = ('0' + hh).slice(-2) + ':' + ('0' + mm).slice(-2) + ':' + ('0' + ss).slice(-2) + '.' + ('00' + ff).slice(-3);
+        }
+
+      </script>
+      <style>
+        #disp_time_counter {
+          font-size: 36pt;
+        }
+        .button {
+          width: 200px;
+          font-size: 24pt;
+        }
+      </style>
+  </head>
+  <body onload="init();">
+
+    <div id="disp_time_counter">
+    </div>
+    <div>
+      <input type="button" id="btn_start" value="START" class="button" onclick="onCLickBtnStart()" />
+      <input type="button" id="btn_stop" value="STOP" class="button" onclick="onClickBtnStop()" />
+    </div>
+    
+  </body>
+</html>
