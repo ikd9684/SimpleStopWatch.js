@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <title>SimpleStopWatch ver.0.4</title>
+    <title>SimpleStopWatch ver.0.5</title>
       <script lang="javascript">
 
         function id(_id) {
@@ -12,25 +12,44 @@
           return document.getElementsByName(_name);
         }
 
+        var INIT_TIME_COUNT = '00:00:00.000';
         var interval;
         var startTime;
+        var offsetTime;
 
         function init() {
           id('btn_start').style.display = 'inline';
           id('btn_stop').style.display = 'none';
-          id('disp_time_counter').textContent = '00:00:00.000';
+          id('btn_reset').disabled = true;
+          id('disp_time_counter').textContent = INIT_TIME_COUNT;
         }
 
         function onCLickBtnStart() {
           id('btn_start').style.display = 'none';
           id('btn_stop').style.display = 'inline';
-          startTime = Date.now();
+          id('btn_reset').disabled = true;
+          if (startTime == null) {
+            startTime = Date.now();
+          }
+          else {
+            startTime = Date.now() - offsetTime;
+          }
           interval = setInterval("countUp()", 1);
         }
         function onClickBtnStop() {
           id('btn_start').style.display = 'inline';
           id('btn_stop').style.display = 'none';
+          id('btn_reset').disabled = false;
           clearInterval(interval);
+          offsetTime = Date.now() - startTime;
+        }
+        function onClickBtnReset() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          id('btn_reset').disabled = true;
+          id('disp_time_counter').textContent = INIT_TIME_COUNT;
+          startTime = null;
+          offsetTime = null;
         }
         function countUp() {
           var time = new Date(Date.now() - startTime);
@@ -59,6 +78,7 @@
     <div>
       <input type="button" id="btn_start" value="START" class="button" onclick="onCLickBtnStart()" />
       <input type="button" id="btn_stop" value="STOP" class="button" onclick="onClickBtnStop()" />
+      <input type="button" id="btn_reset" value="RESET" class="button" onclick="onClickBtnReset()" />
     </div>
     
   </body>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>SimpleStopWatch ver.0.7</title>
+      <script lang="javascript">
+
+        function id(_id) {
+          return document.getElementById(_id);
+        }
+        function name(_name) {
+          return document.getElementsByName(_name);
+        }
+
+        var INIT_TIME_COUNT = '00:00:00.000';
+        var interval;
+        var startTime;
+        var offsetTime;
+
+        function init() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          id('btn_lap').disabled = true;
+          id('btn_reset').disabled = true;
+          id('disp_time_counter').textContent = INIT_TIME_COUNT;
+        }
+
+        function onCLickBtnStart() {
+          id('btn_start').style.display = 'none';
+          id('btn_stop').style.display = 'inline';
+          id('btn_lap').disabled = false;
+          id('btn_reset').disabled = true;
+          if (startTime == null) {
+            startTime = Date.now();
+          }
+          else {
+            startTime = Date.now() - offsetTime;
+          }
+          interval = setInterval("countUp()", 1);
+        }
+        function onClickBtnStop() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          id('btn_lap').disabled = true;
+          id('btn_reset').disabled = false;
+          clearInterval(interval);
+          offsetTime = Date.now() - startTime;
+        }
+        function onClickBtnLap() {
+          var div = document.createElement('div');
+          div.textContent = id('disp_time_counter').textContent;
+          id('disp_lap_times').appendChild(div);
+        }
+        function onClickBtnReset() {
+          id('btn_start').style.display = 'inline';
+          id('btn_stop').style.display = 'none';
+          id('btn_lap').disabled = true;
+          id('btn_reset').disabled = true;
+          id('disp_time_counter').textContent = INIT_TIME_COUNT;
+          for (i = id('disp_lap_times').childNodes.length - 1; 0 <= i; i--) {
+            id('disp_lap_times').removeChild(id('disp_lap_times').childNodes[0]);
+          }
+          startTime = null;
+          offsetTime = null;
+        }
+        function countUp() {
+          var time = new Date(Date.now() - startTime);
+          var hh = time.getHours() + (time.getTimezoneOffset() / 60);
+          var mm = time.getMinutes();
+          var ss = time.getSeconds();
+          var ff = time.getMilliseconds();
+          id('disp_time_counter').textContent = ('0' + hh).slice(-2) + ':' + ('0' + mm).slice(-2) + ':' + ('0' + ss).slice(-2) + '.' + ('00' + ff).slice(-3);
+        }
+
+      </script>
+      <style>
+        #base {
+          width: 600px;
+          margin: auto;
+        }
+        #stop_watch {
+          padding-top: 50px;
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+        }
+        .time_counter {
+          font-size: 36pt;
+        }
+        #buttons {
+          padding: 50px 0px 50px 0px;
+        }
+        .button {
+          width: 150px;
+          font-size: 24pt;
+        }
+      </style>
+  </head>
+  <body onload="init();">
+
+    <div id="base">
+      <div id="stop_watch">
+        <div id="disp_time_counter" class="time_counter">
+        </div>
+        <div id="buttons">
+          <input type="button" id="btn_start" value="START" class="button" onclick="onCLickBtnStart()" />
+          <input type="button" id="btn_stop" value="STOP" class="button" onclick="onClickBtnStop()" />
+          <input type="button" id="btn_lap" value="LAP" class="button" onclick="onClickBtnLap()" />
+          <input type="button" id="btn_reset" value="RESET" class="button" onclick="onClickBtnReset()" />
+        </div>
+        <div id="disp_lap_times" class="time_counter">
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
